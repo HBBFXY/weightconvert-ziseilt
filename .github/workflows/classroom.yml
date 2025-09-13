@@ -1,0 +1,46 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: convert-10kg-to-pounds
+      id: convert-10kg-to-pounds
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: convert-10kg-to-pounds
+        setup-command: ''
+        command: python3 main.py
+        input: 10kg
+        expected-output: 对应的英制重量为22.046磅
+        comparison-method: exact
+        timeout: 10
+        max-score: 50
+    - name: convert-10pd-to-kilograms
+      id: convert-10pd-to-kilograms
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: convert-10pd-to-kilograms
+        setup-command: ''
+        command: python3 main.py
+        input: 10pd
+        expected-output: 对应的公制重量为4.535公斤
+        comparison-method: exact
+        timeout: 10
+        max-score: 50
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        CONVERT-10KG-TO-POUNDS_RESULTS: "${{steps.convert-10kg-to-pounds.outputs.result}}"
+        CONVERT-10PD-TO-KILOGRAMS_RESULTS: "${{steps.convert-10pd-to-kilograms.outputs.result}}"
+      with:
+        runners: convert-10kg-to-pounds,convert-10pd-to-kilograms
