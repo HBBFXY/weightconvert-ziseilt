@@ -1,4 +1,3 @@
-# 在这个文件下编写代码，题目具体要求见README.md文件
 def weight_converter():
     # 获取用户输入
     user_input = input("请输入重量和单位（例如：10kg或10pd）: ").strip().lower()
